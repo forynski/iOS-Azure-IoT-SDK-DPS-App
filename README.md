@@ -1,14 +1,14 @@
 # iOS-Azure-IoT-SDK-DPS-App
+<br>
+</b>Embedded C SDK (Microsoft library):<br>
+  D2C messages<br>
+  C2D messager<br>
+  Device Twin<br>
+  Direct Methods<br>
+  IoT Plug & Play<br>
+  Device Provisioning<br><br>
 
-Embedded C SDK (Microsoft library):
-  D2C messages
-  C2D messager
-  Device Twin
-  Direct Methods
-  IoT Plug & Play
-  Device Provisioning
-
-3rd Party:
-  Swift MQTT
-  Swift NIO-SSL
-  Swift NIO
+3rd Party:<br>
+  Swift MQTT<br>
+  Swift NIO-SSL<br>
+  Swift NIO<br>
