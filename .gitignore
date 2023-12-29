@@ -1,0 +1,104 @@
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User settings
+xcuserdata/
+
+## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
+*.xcscmblueprint
+*.xccheckout
+
+## compatibility with Xcode 3 and earlier (ignoring not required starting Xcode 4)
+build/
+
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+## Swift Package Manager
+## Adds support for Swift Package Manager
+Package.pins
+.build/
+
+## CocoaPods
+Pods/
+*.lock
+*.xcworkspace
+
+## Carthage
+Carthage/Checkouts
+Carthage/Build
+
+## fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+## Code Injection
+Plugins/
+*.xcodeproj/
+*.xcworkspace/
+*.xcplugindata
+*.xcodeproj/
+*.xcodeproj/
+
+## AppCode
+.idea/
+
+## Pods
+Podfile.lock
+Pods/
+
+## User-specific
+*.xcuserstate
+*.xccheckout
+
+## Auto-generated files
+DerivedData/
+*.hmap
+*.ipa
+*.lock
+*.dSYM.zip
+*.dSYM
+*.xcworkspace
+*.xcuserstate
+xcuserdata/
+
+## Environment configuration
+*.xcconfig
+
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## App icons
+*.appiconset/
+
+## Xcode Spotlight
+xcuserdata/
+*.xcuserstate
+
+## Build files
+build/
+*.o
+*.pyc
+
+## Automatic backup files
+*~.nib
+
+## CocoaPods
+Pods/
+
+# Exclude Shared/config.swift
+/Shared/config.swift
+
