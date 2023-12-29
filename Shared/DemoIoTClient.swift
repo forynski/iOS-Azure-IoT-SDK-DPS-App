@@ -9,6 +9,7 @@ import Foundation
 import MQTT
 import NIOSSL
 import CAzureSDKForCSwift
+import CoreMotion
 
 public class DemoProvisioningClient: MQTTClientDelegate {
     
@@ -133,7 +134,7 @@ public class DemoProvisioningClient: MQTTClientDelegate {
 }
 
 class DemoHubClient: MQTTClientDelegate {
-    
+
     public var sendTelemetry: Bool = false
     private var telemetryAckCallback: (() -> Void?)? = nil
 
@@ -147,8 +148,10 @@ class DemoHubClient: MQTTClientDelegate {
         queue
     }
 
-    public init(iothub: String, deviceId: String, telemCallback: @escaping () -> Void)
-    {
+    // Create a motion manager for accessing accelerometer data
+    let motionManager = CMMotionManager()
+
+    public init(iothub: String, deviceId: String, telemCallback: @escaping () -> Void) {
         AzHubClient = AzureIoTHubClient(iothubUrl: iothub, deviceId: deviceId)
 
         let clientCert: [UInt8] = Array(myCert.utf8)
@@ -175,10 +178,43 @@ class DemoHubClient: MQTTClientDelegate {
         mqttClient.delegate = self
 
         telemetryAckCallback = telemCallback
+
+        // Start accelerometer updates
+        startAccelerometerUpdates()
     }
 
-/// Needed Functions for MQTTClientDelegate
+    // Start accelerometer updates
+    private func startAccelerometerUpdates() {
+        if motionManager.isAccelerometerAvailable {
+            motionManager.accelerometerUpdateInterval = 1.0 / 5.0  // Update every 0.2 seconds
+            motionManager.startAccelerometerUpdates(to: .main) { (accelerometerData, error) in
+                guard let acceleration = accelerometerData?.acceleration else { return }
+                // Update the telemetry payload with accelerometer data
+                let payload = "X: \(acceleration.x), Y: \(acceleration.y), Z: \(acceleration.z)"
+                self.sendTelemetryPayload(payload)
+            }
+        } else {
+            print("Accelerometer is not available.")
+        }
+    }
 
+    // Stop accelerometer updates when disconnecting
+    private func stopAccelerometerUpdates() {
+        if motionManager.isAccelerometerActive {
+            motionManager.stopAccelerometerUpdates()
+        }
+    }
+
+    // Send telemetry payload with accelerometer data
+    private func sendTelemetryPayload(_ payload: String) {
+        let swiftString = AzHubClient.GetTelemetryPublishTopic()
+        print("[IoT Hub] Sending a message to topic: \(swiftString)")
+        print("[IoT Hub] Sending a message: \(payload)")
+
+        mqttClient.publish(topic: swiftString, retain: false, qos: QOS.1, payload: payload)
+    }
+
+    // Needed Functions for MQTTClientDelegate
     func mqttClient(_ client: MQTTClient, didReceive packet: MQTTPacket) {
         switch packet {
         case let packet as ConnAckPacket:
@@ -201,6 +237,7 @@ class DemoHubClient: MQTTClientDelegate {
 
     func mqttClient(_: MQTTClient, didChange state: ConnectionState) {
         if state == .disconnected {
+            stopAccelerometerUpdates()
             sem.signal()
         }
         print("[IoT Hub] MQTT state: \(state)")
@@ -210,17 +247,9 @@ class DemoHubClient: MQTTClientDelegate {
         print("[IoT Hub] Error: \(error)")
     }
 
-/// ****************** PUBLIC ******************** ///
-
-/// Sends a message to the IoT hub
+    // Public methods
     public func sendMessage() {
-        let swiftString = AzHubClient.GetTelemetryPublishTopic()
-
-        let telem_payload = "Hello iOS"
-        print("[IoT Hub] Sending a message to topic: \(swiftString)")
-        print("[IoT Hub] Sending a message: \(telem_payload)")
-
-        mqttClient.publish(topic: swiftString, retain: false, qos: QOS.1, payload: telem_payload)
+        // This method can be used if you want to send a specific message, but the accelerometer updates will already be sending telemetry.
     }
 
     public func connectToIoTHub() {
@@ -229,7 +258,7 @@ class DemoHubClient: MQTTClientDelegate {
     }
 
     public func disconnectFromIoTHub() {
-        mqttClient.disconnect();
+        mqttClient.disconnect()
     }
 
     public func subscribeToAzureIoTHubFeatures() {
@@ -245,8 +274,5 @@ class DemoHubClient: MQTTClientDelegate {
         // Twin Patch
         let twinPatchTopic = AzHubClient.GetPropertiesWritablePatchSubscribeTopic()
         mqttClient.subscribe(topic: twinPatchTopic, qos: QOS.1)
-
     }
 }
-
-
