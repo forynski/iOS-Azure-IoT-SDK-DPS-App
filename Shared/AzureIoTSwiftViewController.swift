@@ -2,7 +2,7 @@
 //  AzureIoTSwiftViewController.swift
 //  AzureIoTSwiftSample
 //
-//  
+//
 //
 
 import Foundation
@@ -18,6 +18,8 @@ class AzureIoTHubClientSwift: ObservableObject {
     private(set) var isSendingTelemetry: Bool = false;
     @Published private(set) var numSentMessages: Int = 0;
     @Published private(set) var numSentMessagesGood: Int = 0;
+    
+    @Published var shouldStartAccelerometerUpdates: Bool = false
     
     private(set) var scopeID: String
     private(set) var registrationID: String
@@ -80,4 +82,17 @@ class AzureIoTHubClientSwift: ObservableObject {
         self.hubDemoHubClient.sendMessage()
         DispatchQueue.main.async { self.numSentMessages = self.numSentMessages + 1 }
     }
+
+    
+    func toggleAccelerometerUpdates() {
+            shouldStartAccelerometerUpdates.toggle()
+
+            // Call the corresponding method in your DemoHubClient or any other relevant class
+            if let hubDemoHubClient = hubDemoHubClient {
+                hubDemoHubClient.toggleAccelerometerUpdates()
+                DispatchQueue.main.async { self.numSentMessages = self.numSentMessages + 1 }
+            } else {
+                print("DemoHubClient is not initialized or hubDemoHubClient is nil.")
+            }
+        }
 }

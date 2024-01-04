@@ -103,6 +103,14 @@ struct metricsItems: View {
                 Text("\(iotClient.numSentMessagesGood)")
             }.padding()
         }
+        HStack {
+            // Add a button to toggle accelerometer updates
+            Button(action: {
+                iotClient.toggleAccelerometerUpdates()
+            }, label: {
+                Text(iotClient.shouldStartAccelerometerUpdates ? "Stop Accelerometer" : "Start Accelerometer")
+            }).padding()
+        }
     }
 }
 

@@ -137,6 +137,9 @@ class DemoHubClient: MQTTClientDelegate {
 
     public var sendTelemetry: Bool = false
     private var telemetryAckCallback: (() -> Void?)? = nil
+    
+    private var shouldSendTelemetry: Bool = false
+    private var shouldStartAccelerometerUpdates: Bool = false
 
     /// Azure IoT Client
     private var AzHubClient : AzureIoTHubClient! = nil
@@ -180,7 +183,7 @@ class DemoHubClient: MQTTClientDelegate {
         telemetryAckCallback = telemCallback
 
         // Start accelerometer updates
-        startAccelerometerUpdates()
+//        startAccelerometerUpdates()
     }
 
     // Start accelerometer updates
@@ -212,7 +215,29 @@ class DemoHubClient: MQTTClientDelegate {
         print("[IoT Hub] Sending a message: \(payload)")
 
         mqttClient.publish(topic: swiftString, retain: false, qos: QOS.1, payload: payload)
+        
     }
+    
+    // Public method to toggle telemetry sending
+        public func toggleTelemetrySending() {
+            shouldSendTelemetry.toggle()
+            manageAccelerometerUpdates()
+        }
+    
+    // Start or stop accelerometer updates based on the state of shouldStartAccelerometerUpdates
+        private func manageAccelerometerUpdates() {
+            if shouldStartAccelerometerUpdates {
+                startAccelerometerUpdates()
+            } else {
+                stopAccelerometerUpdates()
+            }
+        }
+    
+    // Public method to toggle starting accelerometer updates
+        public func toggleAccelerometerUpdates() {
+            shouldStartAccelerometerUpdates.toggle()
+            manageAccelerometerUpdates()
+        }
 
     // Needed Functions for MQTTClientDelegate
     func mqttClient(_ client: MQTTClient, didReceive packet: MQTTPacket) {
@@ -250,6 +275,13 @@ class DemoHubClient: MQTTClientDelegate {
     // Public methods
     public func sendMessage() {
         // This method can be used if you want to send a specific message, but the accelerometer updates will already be sending telemetry.
+        let swiftString = AzHubClient.GetTelemetryPublishTopic()
+
+                let telem_payload = "Hello there (test message)"
+                print("[IoT Hub] Sending a message to topic: \(swiftString)")
+                print("[IoT Hub] Sending a message: \(telem_payload)")
+
+                mqttClient.publish(topic: swiftString, retain: false, qos: QOS.1, payload: telem_payload)
     }
 
     public func connectToIoTHub() {
