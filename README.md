@@ -2,17 +2,17 @@
 This example utilizes the [Azure SDK for C](https://github.com/Azure/azure-sdk-for-c) encapsulated within a Swift library available [here](https://github.com/Azure-Samples/azure-sdk-for-c-swift). The Swift library enables users to select their preferred MQTT library and provides APIs that simplify the implementation of Azure IoT concepts.
 
 ## Embedded C SDK (Microsoft library):
-      D2C messages<br>
-      C2D messager<br>
-      Device Twin<br>
-      Direct Methods<br>
-      IoT Plug & Play<br>
-      Device Provisioning<br><br>
+      D2C messages
+      C2D messages
+      Device Twin
+      Direct Methods
+      IoT Plug & Play
+      Device Provisioning
 
 ## 3rd Party:
-      Swift MQTT<br>
-      Swift NIO-SSL<br>
-      Swift NIO<br>
+      Swift MQTT
+      Swift NIO-SSL
+      Swift NIO
   
 ## Key Capabilities:
       IoT Hub client
