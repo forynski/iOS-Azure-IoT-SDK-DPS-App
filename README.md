@@ -1,3 +1,5 @@
+<img alt="Static Badge" src="https://img.shields.io/badge/build%20and%20deploy-passing-brightgreen">
+
 # How to use Swift to interact with Azure SDK for C?
 This example utilizes the [Azure SDK for C](https://github.com/Azure/azure-sdk-for-c) encapsulated within a Swift library available [here](https://github.com/Azure-Samples/azure-sdk-for-c-swift). The Swift library enables users to select their preferred MQTT library and provides APIs that simplify the implementation of Azure IoT concepts.
 
